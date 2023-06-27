@@ -1,3 +1,4 @@
+<!-- FIXME: 404 не показывается:/ -->
 <?php get_header(); ?>
 
 <div class="h-screen container flex flex-col items-center justify-center">

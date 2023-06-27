@@ -14,6 +14,8 @@ class Theme
     public array $viteAssets = [];
     public array $webpackAssets = [];
 
+    public static array $assets;
+
     public static function getInstance(): Theme
     {
         if (self::$instance === null) {
@@ -26,8 +28,10 @@ class Theme
     private function __construct()
     {
         // Получаем данные из файла assets.json
-        if (file_exists(get_theme_file_path('/dist/manifest.json'))) {
-            self::$assets = (array) json_decode(file_get_contents(get_theme_file_path('/dist/manifest.json')));
+        $path = '/' . THEME_BUILD_DIR . '/' . THEME_MANIFEST;
+
+        if (file_exists(get_theme_file_path($path))) {
+            self::$assets = (array) json_decode(file_get_contents(get_theme_file_path($path)));
         }
     }
 
@@ -131,6 +135,50 @@ class Theme
             remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
             add_filter('tiny_mce_plugins', 'disable_emojis_tinymce');
         });
+    }
+
+    /**
+     * Добавляем robots.txt
+     * @return void
+     */
+    public function addRobotsTxt(): void
+    {
+        add_action('do_robotstxt', function () {
+            $site_url = get_site_url();
+            $lines = [
+                'User-agent: *',
+                'Disallow: /wp-admin/',
+                'Allow: /wp-admin/admin-ajax.php',
+                'Disallow: /wp-includes/',
+                "Disallow: */comments",
+                "Disallow: /cgi-bin",             # Стандартная папка на хостинге.
+                "Disallow: /?" ,                  # Все параметры запроса на главной.
+                "Disallow: *?s=",                 # Поиск.
+                "Disallow: *&s=",                 # Поиск.
+                "Disallow: /search",              # Поиск.
+                "Disallow: /author/",             # Архив автора.
+                "Disallow: */embed",              # Все встраивания.
+                "Disallow: */page/",              # Все виды пагинации.
+                "Disallow: */xmlrpc.php",         # Файл WordPress API
+                "Disallow: *utm*=",               # Ссылки с utm-метками
+                "Disallow: *openstat=",           # Ссылки с метками openstat
+                "",
+                'Sitemap: '.$site_url.'/wp-sitemap.xml',
+            ];
+
+            echo implode("\r\n", $lines);
+
+            die; // обрываем работу PHP
+        });
+    }
+
+    /**
+     * Включаем плагин ACF_Archive
+     * @returns void
+     */
+    public function enableACFArchive()
+    {
+        ACF_Archive::instance();
     }
 
     /**

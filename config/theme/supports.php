@@ -5,7 +5,7 @@ $theme = Theme::getInstance();
 /**
  * Включение миниатюр записи
  */
-$theme->addThemeSupport('post-thumbnails');
+$theme->addThemeSupport('post-thumbnails', true);
 
 /**
  * Включение поддержку меню
@@ -78,6 +78,16 @@ $theme->setCountRevisions(5);
  * Отключаем Emoji
  */
 $theme->disableEmojis();
+
+/**
+ * Добавляем robots.txt
+ */
+$theme->addRobotsTxt();
+
+/**
+ * Включаем плагин ACF_Archive
+ */
+$theme->enableACFArchive();
 
 /**
  * Отключение полноэкранного режима в gutenberg

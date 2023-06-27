@@ -25,11 +25,11 @@ module.exports = {
             'sm': '576px',
             'md': '768px',
             'lg': '1024px',
-            'xl': '1280px',
-            'xxl': '1536px',
+            'xl': '1350px',
+            'xxl': '1400px',
             'lgr': {'max': '1023px'},
-            'xlr': {'max': '1279px'},
-            'xxlr': {'max': '1535px'},
+            'xlr': {'max': '1349px'},
+            'xxlr': {'max': '1399px'},
         },
         extend: {
             aspectRatio: {
